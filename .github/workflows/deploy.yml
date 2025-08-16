@@ -1,6 +1,6 @@
 name: Deploy to Deno Deploy
 
-# Automatically deploy to production on push to main branch
+# Automatically deploy to production on every push to main branch
 on:
   push:
     branches: [main]
