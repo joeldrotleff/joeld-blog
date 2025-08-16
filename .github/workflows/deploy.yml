@@ -1,0 +1,36 @@
+name: Deploy to Deno Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # Needed for auth with Deno Deploy
+      contents: read # Needed to clone the repository
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Install Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+
+      - name: Build step
+        run: "deno task build" # Build Fresh app
+
+      - name: Load articles into KV
+        run: "deno task articles:reload" # Load articles into KV store
+        
+      - name: Deploy to Deno Deploy Production
+        uses: denoland/deployctl@v1
+        with:
+          project: "6ec362a0-d7ac-43fc-b6c4-f9dd5729b1e3" # Using project ID from deno.json
+          entrypoint: "./main.ts"
+          root: "."
+          production: true # Deploy directly to production
