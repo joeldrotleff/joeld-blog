@@ -13,6 +13,7 @@ export default function BlogLayout({ posts, selectedPost: initialPost, selectedP
   
   const readingProgress = useSignal(0);
   const isDarkMode = useSignal(true);
+  const isSidebarOpen = useSignal(false);
 
   useEffect(() => {
     const handleScroll = (e: Event) => {
@@ -48,6 +49,14 @@ export default function BlogLayout({ posts, selectedPost: initialPost, selectedP
     }
   }, [selectedPostId.value]);
 
+  // Close sidebar when selecting a post on mobile
+  const handlePostSelect = (postId: string) => {
+    selectedPostId.value = postId;
+    if (window.innerWidth < 768) {
+      isSidebarOpen.value = false;
+    }
+  };
+
   return (
     <div 
       class="min-h-screen flex relative transition-all duration-500 ease-in-out"
@@ -57,10 +66,42 @@ export default function BlogLayout({ posts, selectedPost: initialPost, selectedP
         color: isDarkMode.value ? '#e5e7eb' : '#111827'
       }}
     >
+      {/* Mobile Menu Button */}
+      <button
+        onClick={() => isSidebarOpen.value = !isSidebarOpen.value}
+        class="md:hidden fixed top-4 left-4 z-50 p-2 rounded-lg transition-colors"
+        style={{
+          backgroundColor: isDarkMode.value ? '#374151' : '#e5e7eb',
+          color: isDarkMode.value ? '#f3f4f6' : '#1f2937'
+        }}
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          {isSidebarOpen.value ? (
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          ) : (
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          )}
+        </svg>
+      </button>
+
+      {/* Overlay for mobile */}
+      {isSidebarOpen.value && (
+        <div
+          class="md:hidden fixed inset-0 bg-black bg-opacity-50 z-30 transition-opacity duration-300"
+          onClick={() => isSidebarOpen.value = false}
+        />
+      )}
       
       {/* Sidebar */}
       <aside 
-        class="w-80 p-6 overflow-y-auto transition-all duration-500 ease-in-out"
+        class={`
+          fixed md:relative
+          w-80 h-full md:h-auto
+          p-6 overflow-y-auto 
+          transition-all duration-300 ease-in-out
+          z-40
+          ${isSidebarOpen.value ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+        `}
         style={{
           background: isDarkMode.value 
             ? 'linear-gradient(to bottom, #1f2937, #111827)' 
@@ -70,7 +111,9 @@ export default function BlogLayout({ posts, selectedPost: initialPost, selectedP
           borderRightStyle: 'solid'
         }}
       >
-        <h1 class="text-2xl font-bold mb-8" style={{ color: isDarkMode.value ? '#f3f4f6' : '#1f2937' }}>Joel Drotleff</h1>
+        <h1 class="text-2xl font-bold mb-8 mt-12 md:mt-0" style={{ color: isDarkMode.value ? '#f3f4f6' : '#1f2937' }}>
+          Joel Drotleff
+        </h1>
         
         {/* Theme Toggle */}
         <div class={`mb-8 pb-8 ${isDarkMode.value ? 'border-b border-gray-700' : 'border-b border-gray-300'}`}>
@@ -127,9 +170,7 @@ export default function BlogLayout({ posts, selectedPost: initialPost, selectedP
                     ? '#ffffff'
                     : isDarkMode.value ? '#d1d5db' : '#374151'
                 }}
-                onClick={() => {
-                  selectedPostId.value = post.id;
-                }}
+                onClick={() => handlePostSelect(post.id)}
                 onMouseEnter={(e) => {
                   if (selectedPostId.value !== post.id) {
                     (e.currentTarget as HTMLElement).style.backgroundColor = isDarkMode.value ? '#374151' : '#e5e7eb';
@@ -150,7 +191,7 @@ export default function BlogLayout({ posts, selectedPost: initialPost, selectedP
       </aside>
 
       {/* Main Content */}
-      <main class="flex-1 overflow-y-auto max-h-screen relative">
+      <main class="flex-1 overflow-y-auto max-h-screen relative w-full">
         {/* Sticky Article Header */}
         <header 
           class="sticky top-0 z-10 w-full transition-all duration-500 ease-in-out"
@@ -161,9 +202,12 @@ export default function BlogLayout({ posts, selectedPost: initialPost, selectedP
             borderBottomStyle: 'solid'
           }}
         >
-          <div class="max-w-3xl mx-auto px-8 py-6">
-            <h1 class="text-3xl font-bold mb-2" style={{ color: isDarkMode.value ? '#f3f4f6' : '#111827' }}>{selectedPost.title}</h1>
-            <div class="flex items-center gap-3 text-sm" style={{ color: isDarkMode.value ? '#9ca3af' : '#4b5563' }}>
+          <div class="max-w-3xl mx-auto px-4 md:px-8 py-4 md:py-6">
+            {/* Add padding-left on mobile to make room for menu button */}
+            <h1 class="text-2xl md:text-3xl font-bold mb-2 pl-12 md:pl-0" style={{ color: isDarkMode.value ? '#f3f4f6' : '#111827' }}>
+              {selectedPost.title}
+            </h1>
+            <div class="flex items-center gap-3 text-sm pl-12 md:pl-0" style={{ color: isDarkMode.value ? '#9ca3af' : '#4b5563' }}>
               <time>{selectedPost.date}</time>
               <span>·</span>
               <div class="relative flex items-center">
@@ -204,7 +248,7 @@ export default function BlogLayout({ posts, selectedPost: initialPost, selectedP
           </div>
         </header>
         
-        <article class="max-w-3xl mx-auto p-8">
+        <article class="max-w-3xl mx-auto p-4 md:p-8">
           <div 
             class={`prose prose-lg max-w-none ${isDarkMode.value ? 'prose-invert' : ''}`}
             dangerouslySetInnerHTML={{ __html: selectedPost.content }}
