@@ -30,7 +30,6 @@ jobs:
       - name: Deploy to Deno Deploy Production
         uses: denoland/deployctl@v1
         with:
-          project: "6ec362a0-d7ac-43fc-b6c4-f9dd5729b1e3" # Using project ID from deno.json
+          project: "joeld-blog" # Use project name, not ID
           entrypoint: "./main.ts"
           root: "."
-          production: true # Deploy directly to production
