@@ -1,3 +1,37 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Custom styles for blog images */
+@layer components {
+  .prose img {
+    @apply max-w-full h-auto mx-auto;
+  }
+  
+  .prose p img {
+    @apply my-8;
+  }
+  
+  /* Prevent inline images from being too large */
+  .prose p img[alt*="icon" i],
+  .prose p img[alt*="logo" i],
+  .prose p img[alt*="inline" i] {
+    @apply inline-block w-auto h-6 my-0 mx-1 align-middle shadow-none;
+  }
+  
+  /* Center single images in paragraphs */
+  .prose p:has(img:only-child) {
+    @apply text-center;
+  }
+  
+  /* Style for multiple images in a row */
+  .prose p img + img {
+    @apply ml-2;
+  }
+  
+  /* Ensure GIFs and videos are responsive */
+  .prose img[src*=".gif"],
+  .prose video {
+    @apply max-w-full h-auto rounded-lg;
+  }
+}
