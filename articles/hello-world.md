@@ -5,8 +5,6 @@ description: Welcome to my vibecoded blog
 tags: ["introduction", "deno", "fresh"]
 ---
 
-## Hello, World!
-
 Welcome to my little vibecoded blog. It runs in Deno Deploy and uses the Fresh framework.
 
 
