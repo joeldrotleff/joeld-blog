@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  body {
+    font-family: 'Fira Code', monospace;
+  }
+}
+
 /* Custom styles for blog images */
 @layer components {
   .prose img {
