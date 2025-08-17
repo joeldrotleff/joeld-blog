@@ -70,7 +70,11 @@ async function compileArticles() {
       const filename = basename(entry.path, extname(entry.path));
       const slug = frontmatter.slug || filename.toLowerCase().replace(/\s+/g, "-");
       
-      // Convert markdown to HTML
+      // Convert markdown to HTML with proper line break handling
+      marked.setOptions({
+        breaks: true, // Convert \n to <br>
+        gfm: true,    // GitHub Flavored Markdown
+      });
       const htmlContent = await marked(body);
       
       // Calculate reading time if not provided

@@ -10,7 +10,8 @@
     "preview": "deno run -A --unstable-kv main.ts",
     "update": "deno run -A -r https://fresh.deno.dev/update .",
     "articles:reload": "deno run --allow-read --allow-write --allow-env --unstable-kv scripts/compile-articles.ts",
-    "articles:clear": "deno run --allow-env --unstable-kv scripts/clear-articles.ts"
+    "articles:clear": "deno run --allow-env --unstable-kv scripts/clear-articles.ts",
+    "articles:deploy": "deno run --allow-read --allow-env --allow-net --unstable-kv --env-file=.env.prod scripts/deploy-articles.ts"
   },
   "lint": {
     "rules": {
@@ -32,6 +33,7 @@
     "tailwindcss": "npm:tailwindcss@3.4.1",
     "tailwindcss/": "npm:/tailwindcss@3.4.1/",
     "tailwindcss/plugin": "npm:/tailwindcss@3.4.1/plugin.js",
+    "@tailwindcss/typography": "npm:@tailwindcss/typography@0.5.10",
     "$std/": "https://deno.land/std@0.216.0/"
   },
   "compilerOptions": {
