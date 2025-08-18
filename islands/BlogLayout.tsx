@@ -61,7 +61,7 @@ export default function BlogLayout({ posts, selectedPost: initialPost, selectedP
     <div 
       class="min-h-screen flex relative transition-all duration-500 ease-in-out"
       style={{ 
-        fontFamily: "'IBM Plex Mono', monospace",
+        fontFamily: "'Fira Code', monospace",
         backgroundColor: isDarkMode.value ? '#111827' : '#ffffff',
         color: isDarkMode.value ? '#e5e7eb' : '#111827'
       }}
